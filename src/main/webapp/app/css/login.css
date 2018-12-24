@@ -1,0 +1,59 @@
+
+.login-box{
+    width: 50%;
+    height: 55%;
+    margin-left: 25%;
+    margin-top: 5%;
+}
+
+.login-form{
+    border: 2px solid black;
+    width: 60%;
+    height: 70%;
+    margin-left: 20%;
+    padding-top: 4%;
+
+}
+
+.login-line-div{
+    display: block;
+    width: 80%;
+    margin: 7.5% 10%;
+    height: 16%;
+}
+
+.login-line-div label{
+    display: inline-block;
+    vertical-align: middle;
+    width: 80px;
+    height: 30px;
+    font-size: 20px;
+    text-align: left;
+    margin-right: 3%;
+}
+
+.login-line-div input{
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    height: 30px;
+    width: 200px;
+    font-size: 24px;
+    margin-left: 3%;
+    background: transparent;
+    border: 2px solid midnightblue;
+    border-radius: 5px;
+}
+
+.login-line-div button{
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    height: 36px;
+    font-size: 22px;
+    color: midnightblue;
+    font-weight: bold;
+    background: transparent;
+    border: 3px solid midnightblue;
+    border-radius: 2px;
+}
