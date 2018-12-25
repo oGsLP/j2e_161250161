@@ -78,6 +78,7 @@ public class LoginServlet extends HttpServlet {
             String username= (String) session.getAttribute("username");
             if(username!=null){
                 res.sendRedirect("/app/listLayout");
+
             }
             else {
 //                res.sendRedirect("/app/login.jsp");

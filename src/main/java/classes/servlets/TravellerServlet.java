@@ -30,6 +30,6 @@ public class TravellerServlet extends HttpServlet {
         int counter= Integer.parseInt((String) servletContext.getAttribute("traveller-counter")) ;
         counter++;
         servletContext.setAttribute("traveller-counter",counter+"");
-        response.sendRedirect("/app/traveller.jsp");
+        request.getRequestDispatcher("/app/traveller.jsp").forward(request,response);
     }
 }

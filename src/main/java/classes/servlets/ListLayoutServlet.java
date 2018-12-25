@@ -36,17 +36,17 @@ public class ListLayoutServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session=request.getSession(false);
-        if(session==null){
-            response.sendRedirect("/app/login");
-        }
-        else {
-            String s= (String) session.getAttribute("username");
-            if(s == null){
-                response.sendRedirect("/app/login");
-                return;
-            }
-        }
+//        HttpSession session=request.getSession(false);
+//        if(session==null){
+//            response.sendRedirect("/app/login");
+//        }
+//        else {
+//            String s= (String) session.getAttribute("username");
+//            if(s == null){
+//                response.sendRedirect("/app/login");
+//                return;
+//            }
+//        }
 
         try {
             con = dataSource.getConnection();
