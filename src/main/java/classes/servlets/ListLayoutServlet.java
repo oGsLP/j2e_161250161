@@ -1,6 +1,7 @@
 package classes.servlets;
 
 import classes.entities.Goods;
+import classes.helpers.JSONHelper;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -36,17 +37,6 @@ public class ListLayoutServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session=request.getSession(false);
-//        if(session==null){
-//            response.sendRedirect("/app/login");
-//        }
-//        else {
-//            String s= (String) session.getAttribute("username");
-//            if(s == null){
-//                response.sendRedirect("/app/login");
-//                return;
-//            }
-//        }
 
         try {
             con = dataSource.getConnection();
@@ -58,11 +48,12 @@ public class ListLayoutServlet extends HttpServlet {
                 goods.add(new Goods(result.getInt(1),result.getString(2),result.getString(3),result.getDouble(4),result.getInt(5)));
 //                System.out.println("Goods:" +result.getString(2));
             }
+            String goods_Json = JSONHelper.toJson(goods);
             System.out.println("Find "+goods.size()+" goods");
             result.close();
             stmt.close();
             con.close();
-            request.setAttribute("goods",goods);
+            request.setAttribute("stock_list",goods_Json);
             request.getRequestDispatcher("/app/stockList.jsp").forward(request,response);
         } catch (SQLException e) {
             e.printStackTrace();

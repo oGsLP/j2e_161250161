@@ -2,6 +2,7 @@ package classes.servlets;
 
 
 import classes.entities.User;
+import classes.factory.ServiceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -28,47 +29,27 @@ import java.sql.*;
  */
 @WebServlet("/app/login")
 public class LoginServlet extends HttpServlet {
-    Context ctx; DataSource dataSource; ResultSet result;PreparedStatement pstmt;
-    public void init(){
-        try {
-            ctx=new InitialContext();
-            dataSource=(DataSource) ctx.lookup("java:comp/env/jdbc/jee_hw");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
+
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
-        try {
-            Connection con= dataSource.getConnection();
-            pstmt=con.prepareStatement("select * from user where username=?");
-            pstmt.setString(1,username);
-            result=pstmt.executeQuery();
-            if(result.next()){
-                if(result.getString("password").equals(password)){
-                    User user =new User(result.getInt(1),result.getString(2),result.getString(3),result.getDouble(4));
-                    HttpSession session = request.getSession(true);
-                    session.setAttribute("username", username);
+        if(ServiceFactory.getUserService().checkUserName(username)){
+            if(ServiceFactory.getUserService().checkUserPassword(username,password)){
+                HttpSession session = request.getSession(true);
+                session.setAttribute("username", username);
 
-                    ServletContext servletContext=getServletContext();
-                    int counter= Integer.parseInt((String) servletContext.getAttribute("user-counter")) ;
-                    counter++;
-                    servletContext.setAttribute("user-counter",counter+"");
-                    response.sendRedirect("/app/listLayout");
-                }
-                else{
-                    response.sendRedirect("/app/wrongPassword.jsp");
-                }
+                ServletContext servletContext=getServletContext();
+                int counter= Integer.parseInt((String) servletContext.getAttribute("user-counter")) ;
+                counter++;
+                servletContext.setAttribute("user-counter",counter+"");
+                response.sendRedirect("/app/listLayout");
             }
             else {
-                response.sendRedirect("/app/wrongUser.jsp");
+                response.sendRedirect("/app/wrongPassword.jsp");
             }
-            result.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        else {
+            response.sendRedirect("/app/wrongUser.jsp");
         }
     }
 
@@ -78,15 +59,12 @@ public class LoginServlet extends HttpServlet {
             String username= (String) session.getAttribute("username");
             if(username!=null){
                 res.sendRedirect("/app/listLayout");
-
             }
             else {
-//                res.sendRedirect("/app/login.jsp");
                 req.getRequestDispatcher("/app/login.jsp").forward(req,res);
             }
         }
         else {
-//            res.sendRedirect("/app/login.jsp");
             req.getRequestDispatcher("/app/login.jsp").forward(req,res);
         }
     }

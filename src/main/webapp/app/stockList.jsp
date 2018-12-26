@@ -19,10 +19,6 @@
     <link rel="stylesheet" href="css/stockList.css" media="all" type="text/css">
 </head>
 
-<%
-    List<Goods> all= (List<Goods>) request.getAttribute("goods");
-    String allJson = JSONHelper.toJson(all);
-%>
 
 
 <body onload="generateStock();">
@@ -58,7 +54,7 @@
 </body>
 <script>
     function generateStock() {
-        let stocks = JSON.parse('<%=allJson%>');
+        let stocks = JSON.parse('<%=request.getAttribute("stock_list")%>');
         console.log(stocks.length);
     // <ul class="stock-list-ul">
     //         <li class="stock-list-item">

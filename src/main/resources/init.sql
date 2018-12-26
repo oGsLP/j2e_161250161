@@ -1,14 +1,12 @@
-show databases;
 create database if not exists jee_hw;
 use jee_hw;
-show tables;
 create table if not exists user(
   id int primary key auto_increment,
   username varchar(255) not null,
   password varchar(255) not null,
   account double(10,2) not null default 0
 );
-describe user;
+
 insert into user(username, password, account) values('ogslp','123456',500.00);
 
 create table if not exists goods(
@@ -18,7 +16,6 @@ create table if not exists goods(
   price double(8,2) not null default 5,
   num int not null default 0
 );
-select count(*) as size from goods;
 
 insert into goods(name, kind, price, num) values('小米','手机',2500,220);
 insert into goods(name, kind, price, num) values('iphoneX','手机',7500,200);

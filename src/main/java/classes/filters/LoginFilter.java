@@ -59,7 +59,7 @@ public class LoginFilter implements Filter {
     }
 
     public void init(FilterConfig config) throws ServletException {
-        excludedPage=new String[]{"/index.jsp","/favicon.ico","/app/login","/app/login.jsp","/app/traveller"};
+        excludedPage=new String[]{"/index.jsp","/favicon.ico","/app/login","/app/login.jsp","/app/traveller","/app/wrongUser.jsp","/app/wrongPassword.jsp"};
     }
 
 }
