@@ -27,12 +27,17 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         boolean isExcludedPage = false;
         System.out.println("to : "+((HttpServletRequest) req).getServletPath());
-        for (String page : excludedPage) {
-            if (((HttpServletRequest) req).getServletPath().equals(page)) {
-                isExcludedPage = true;
-                break;
+        if(((HttpServletRequest) req).getServletPath().endsWith("css"))
+            isExcludedPage=true;
+        else {
+            for (String page : excludedPage) {
+                if (((HttpServletRequest) req).getServletPath().equals(page)) {
+                    isExcludedPage = true;
+                    break;
+                }
             }
         }
+
         if(isExcludedPage){
             chain.doFilter(req,resp);
         }

@@ -30,8 +30,6 @@ import java.util.List;
 public class LiquidateServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        int s1= Integer.parseInt(request.getParameter("goods1"));
-//        int s2= Integer.parseInt(request.getParameter("goods2"));
 
         int i=1;int peak=getGoodsNum();
         ArrayList<ShopCart> list = new ArrayList<>();
@@ -62,7 +60,7 @@ public class LiquidateServlet extends HttpServlet {
             pw.println("<a href=\"login\">"+"back"+"</a>");
             pw.println("</body></html>");
         }
-        
+
     }
 
 
