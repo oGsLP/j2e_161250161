@@ -42,14 +42,29 @@ public class LiquidateServlet extends HttpServlet {
         }
         if(ServiceFactory.getShopService().checkAndSumList(list)){
             String username= (String) request.getSession().getAttribute("username");
+            double beforeAccount=ServiceFactory.getUserService().findUser(username).getAccount();
             String message=ServiceFactory.getShopService().liquidateShopCart(username,list);
+            double beforeDiscount=ServiceFactory.getShopService().sumList(list);
+            double afterDiscount=ServiceFactory.getShopService().getAfterDiscount(beforeDiscount);
+            double afterAccount=ServiceFactory.getUserService().findUser(username).getAccount();
 
-                PrintWriter pw=response.getWriter();
-                pw.println("<html>" +
-                        "<body style=\"text-align:center\">");
-                pw.println("<p>"+message+"</p>");
-                pw.println("<a href=\"login\">"+"back"+"</a>");
-                pw.println("</body></html>");
+
+            PrintWriter pw=response.getWriter();
+            pw.println("<html>" +
+                    "<body style=\"text-align:center\">");
+            pw.println("<p>"+message+"</p>");
+            pw.println("<p>beforeAccount</p>");
+            pw.println("<p>"+beforeAccount+"</p>");
+            pw.println("<p>afterAccount</p>");
+            pw.println("<p>"+afterAccount+"</p>");
+
+            pw.println("<p>beforeDiscount</p>");
+            pw.println("<p>"+beforeDiscount+"</p>");
+            pw.println("<p>afterDiscount</p>");
+            pw.println("<p>"+afterDiscount+"</p>");
+
+            pw.println("<a href=\"login\">"+"back"+"</a>");
+            pw.println("</body></html>");
 
         }
         else {

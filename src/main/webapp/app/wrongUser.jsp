@@ -15,7 +15,7 @@
 <jsp:include page="header.jsp"/>
 
 <h2>Wrong UserName</h2>
-<a href="../index.jsp">Back to login</a>
+<a href="/app/login">Back to login</a>
 <jsp:include page="footer.jsp"/>
 </body>
 </html>

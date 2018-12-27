@@ -1,10 +1,8 @@
 package classes.filters;
 
-import com.sun.deploy.net.HttpRequest;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,7 +15,7 @@ import java.io.IOException;
  * @Time: 15:13
  * @Package: ${PACKAGE_NAME}
  */
-@WebFilter("/*")
+@WebFilter("/app/*")
 public class LoginFilter implements Filter {
     private String[] excludedPage;
 
@@ -27,16 +25,13 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         boolean isExcludedPage = false;
         System.out.println("to : "+((HttpServletRequest) req).getServletPath());
-        if(((HttpServletRequest) req).getServletPath().endsWith("css"))
-            isExcludedPage=true;
-        else {
-            for (String page : excludedPage) {
-                if (((HttpServletRequest) req).getServletPath().equals(page)) {
-                    isExcludedPage = true;
-                    break;
-                }
+        for (String page : excludedPage) {
+            if (((HttpServletRequest) req).getServletPath().equals(page)) {
+                isExcludedPage = true;
+                break;
             }
         }
+
 
         if(isExcludedPage){
             chain.doFilter(req,resp);
@@ -63,8 +58,8 @@ public class LoginFilter implements Filter {
 
     }
 
-    public void init(FilterConfig config) throws ServletException {
-        excludedPage=new String[]{"/index.jsp","/favicon.ico","/app/login","/app/login.jsp","/app/traveller","/app/wrongUser.jsp","/app/wrongPassword.jsp"};
+    public void init(FilterConfig config) {
+        excludedPage=new String[]{"/index.jsp","/app/login","/app/login.jsp","/app/traveller","/app/isolate"};
     }
 
 }

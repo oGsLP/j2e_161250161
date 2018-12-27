@@ -15,7 +15,8 @@
 <jsp:include page="header.jsp"/>
 
 <h2>Wrong Passwd</h2>
-<a href="../index.jsp">Back to login</a>
+<h3><%=request.getSession(false).getAttribute("unreachable")%></h3>
+<a href="/app/login">Back to login</a>
 <jsp:include page="footer.jsp"/>
 </body>
 </html>

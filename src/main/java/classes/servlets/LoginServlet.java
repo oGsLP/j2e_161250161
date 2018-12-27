@@ -1,12 +1,7 @@
 package classes.servlets;
 
-
-import classes.entities.User;
 import classes.factory.ServiceFactory;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 import java.io.IOException;
 
-import java.io.PrintWriter;
-import java.sql.*;
 
 /**
  * @你大爷: XYF
@@ -45,11 +37,11 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("/app/listLayout");
             }
             else {
-                response.sendRedirect("/app/wrongPassword.jsp");
+                request.getRequestDispatcher("/app/wrongPassword.jsp").forward(request,response);
             }
         }
         else {
-            response.sendRedirect("/app/wrongUser.jsp");
+            request.getRequestDispatcher("/app/wrongUser.jsp").forward(request,response);
         }
     }
 

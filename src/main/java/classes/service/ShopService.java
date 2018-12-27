@@ -20,9 +20,12 @@ public interface ShopService {
      * @param list
      * @return
      */
-
     String liquidateShopCart(String username,List<ShopCart> list);
 
     boolean checkAndSumList(List<ShopCart> list);
+
+    double sumList(List<ShopCart> list);
+
+    double getAfterDiscount(double sum);
 
 }
