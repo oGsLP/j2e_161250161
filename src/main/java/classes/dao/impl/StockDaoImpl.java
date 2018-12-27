@@ -6,7 +6,6 @@ import classes.helpers.MYSQLHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @你大爷: XYF
@@ -82,7 +81,7 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
-    public List getStock() {
+    public ArrayList<Goods> getStock() {
         Connection connection=mysqlHelper.getConnection();
         Statement statement=null;
         ResultSet result=null;
@@ -105,8 +104,28 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public boolean addStock(Goods goods) {
-        return false;
+        if(goods!=null){
+            Connection connection=mysqlHelper.getConnection();
+            PreparedStatement pstmt=null;
+            try {
+                pstmt=connection.prepareStatement("insert into goods(name,kind,price,num) values(?,?,?,?)");
+                setGoodsExID(goods, pstmt);
+                pstmt.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                mysqlHelper.closePreparedStatement(pstmt);
+                mysqlHelper.closeConnection(connection);
+            }
+            return true;
+        }
+        else
+            return false;
     }
+
+
 
     @Override
     public boolean updateGoods(Goods goods) {
@@ -115,10 +134,7 @@ public class StockDaoImpl implements StockDao {
             PreparedStatement pstmt=null;
             try {
                 pstmt=connection.prepareStatement("update goods set name=?,kind=?,price=?,num=? where id=?");
-                pstmt.setString(1,goods.getName());
-                pstmt.setString(2,goods.getKind());
-                pstmt.setDouble(3,goods.getPrice());
-                pstmt.setInt(4,goods.getNum());
+                setGoodsExID(goods, pstmt);
                 pstmt.setInt(5,goods.getId());
                 pstmt.executeUpdate();
                 connection.commit();
@@ -136,13 +152,40 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
-    public boolean deleteGoods(Goods goods) {
-        return false;
+    public boolean deleteGoods(String name) {
+        if(name!=null){
+            Connection connection=mysqlHelper.getConnection();
+            PreparedStatement pstmt=null;
+            try {
+                pstmt=connection.prepareStatement("delete from goods where name=?");
+                pstmt.setString(1,name);
+                pstmt.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            finally {
+                mysqlHelper.closePreparedStatement(pstmt);
+                mysqlHelper.closeConnection(connection);
+            }
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override
     public int getGoodsNum() {
         return getStock().size();
+    }
+
+
+
+    private void setGoodsExID(Goods goods, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1,goods.getName());
+        pstmt.setString(2,goods.getKind());
+        pstmt.setDouble(3,goods.getPrice());
+        pstmt.setInt(4,goods.getNum());
     }
 
 }

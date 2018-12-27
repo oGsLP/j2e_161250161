@@ -3,7 +3,7 @@ package classes.dao;
 
 import classes.entities.Goods;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @你大爷: XYF
@@ -32,7 +32,7 @@ public interface StockDao {
      * 返回goods列表
      * @return
      */
-    List getStock();
+    ArrayList<Goods> getStock();
 
     /**
      * 增加一个goods
@@ -50,10 +50,10 @@ public interface StockDao {
 
     /**
      * 删除一个goods
-     * @param goods
+     * @param name
      * @return
      */
-    boolean deleteGoods(Goods goods);
+    boolean deleteGoods(String name);
 
     /**
      * 获得所有商品的个数

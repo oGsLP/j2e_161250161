@@ -11,7 +11,7 @@ import java.util.List;
  * @Time: 20:30
  * @Package: classes.service
  */
-public interface UserService {
+public interface UserManageService {
 
     /**
      * 根据ID找user
@@ -77,4 +77,5 @@ public interface UserService {
      * @return
      */
     boolean spendMoney(String username,double sum);
+
 }

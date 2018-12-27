@@ -2,7 +2,7 @@ package classes.service.impl;
 
 import classes.entities.User;
 import classes.factory.DaoFactory;
-import classes.service.UserService;
+import classes.service.UserManageService;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
  * @Time: 21:28
  * @Package: classes.service.impl
  */
-public class UserServiceImpl implements UserService {
+public class UserManageServiceImpl implements UserManageService {
 
 
-    private static UserServiceImpl userService=new UserServiceImpl();
-    public static UserServiceImpl getInstance(){return userService;}
+    private static UserManageServiceImpl userService=new UserManageServiceImpl();
+    public static UserManageServiceImpl getInstance(){return userService;}
 
 
     @Override

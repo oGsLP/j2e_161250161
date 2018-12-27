@@ -3,7 +3,6 @@ package classes.service;
 import classes.entities.Goods;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @你大爷: XYF
@@ -12,7 +11,7 @@ import java.util.List;
  * @Time: 20:45
  * @Package: classes.service
  */
-public interface StockService  {
+public interface StockManageService {
 
 
 
@@ -34,7 +33,7 @@ public interface StockService  {
      * 返回goods列表
      * @return
      */
-    List getStock();
+    ArrayList<Goods> getStock();
 
     /**
      * 增加一个goods
@@ -52,10 +51,10 @@ public interface StockService  {
 
     /**
      * 删除一个goods
-     * @param goods
+     * @param name
      * @return
      */
-    boolean deleteGoods(Goods goods);
+    boolean deleteGoods(String name);
 
     /**
      * 获得所有goods个数

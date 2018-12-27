@@ -2,10 +2,9 @@ package classes.service.impl;
 
 import classes.entities.Goods;
 import classes.factory.DaoFactory;
-import classes.factory.ServiceFactory;
-import classes.service.StockService;
+import classes.service.StockManageService;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @你大爷: XYF
@@ -14,9 +13,9 @@ import java.util.List;
  * @Time: 21:28
  * @Package: classes.service.impl
  */
-public class StockServiceImpl implements StockService {
-    private static StockServiceImpl stockService=new StockServiceImpl();
-    public static StockServiceImpl getInstance(){return stockService;}
+public class StockManageServiceImpl implements StockManageService {
+    private static StockManageServiceImpl stockService=new StockManageServiceImpl();
+    public static StockManageServiceImpl getInstance(){return stockService;}
 
     @Override
     public Goods findGoods(int id) {
@@ -25,7 +24,7 @@ public class StockServiceImpl implements StockService {
         if(name!=null){
             goods=findGoods(name);
         }
-        return null;
+        return goods;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List getStock() {
+    public ArrayList<Goods> getStock() {
         return DaoFactory.getStockDao().getStock();
     }
 
@@ -49,7 +48,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public boolean deleteGoods(Goods goods) {
+    public boolean deleteGoods(String name) {
         return false;
     }
 
@@ -60,19 +59,20 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public boolean buyGoods(String name, int num) {
-        Goods goods=DaoFactory.getStockDao().findGoods(name);
-        if(goods!=null){
-            int stockNum=goods.getNum();
-            if(stockNum<num){
-                return false;
-            }
-            else {
-                goods.setNum(stockNum-num);
-                updateGoods(goods);
-                return true;
-            }
-        }
-        else
+//        Goods goods=DaoFactory.getStockDao().findGoods(name);
+//        if(goods!=null){
+//            int stockNum=goods.getNum();
+//            if(stockNum<num){
+//                return false;
+//            }
+//            else {
+//                goods.setNum(stockNum-num);
+//                updateGoods(goods);
+//                return true;
+//            }
+//        }
+//        else
             return false;
     }
+
 }

@@ -1,9 +1,11 @@
 package classes.factory;
 
-import classes.service.StockService;
-import classes.service.UserService;
-import classes.service.impl.StockServiceImpl;
-import classes.service.impl.UserServiceImpl;
+import classes.service.ShopService;
+import classes.service.StockManageService;
+import classes.service.UserManageService;
+import classes.service.impl.ShopServiceImpl;
+import classes.service.impl.StockManageServiceImpl;
+import classes.service.impl.UserManageServiceImpl;
 
 /**
  * @你大爷: XYF
@@ -14,11 +16,14 @@ import classes.service.impl.UserServiceImpl;
  */
 public class ServiceFactory {
 
-    public static UserService getUserService(){
-        return UserServiceImpl.getInstance();
+    public static UserManageService getUserService(){
+        return UserManageServiceImpl.getInstance();
     }
 
-    public static StockService getStockService(){
-        return StockServiceImpl.getInstance();
+    public static StockManageService getStockService(){
+        return StockManageServiceImpl.getInstance();
     }
+
+    public static ShopService getShopService(){return ShopServiceImpl.getInstance();}
+
 }
