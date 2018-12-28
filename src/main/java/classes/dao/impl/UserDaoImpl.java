@@ -158,7 +158,6 @@ public class UserDaoImpl implements UserDao {
         if(user!=null){
             Connection connection=mysqlHelper.getConnection();
             PreparedStatement pstmt=null;
-
             try {
                 pstmt=connection.prepareStatement("update user set username=?,password=?,account=? where id=?");
                 setUserExID(user,pstmt);

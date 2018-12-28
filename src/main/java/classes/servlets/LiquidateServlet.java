@@ -1,23 +1,17 @@
 package classes.servlets;
 
-import classes.entities.Goods;
 import classes.factory.ServiceFactory;
 import classes.models.ShopCart;
+import classes.models.ShopResult;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @你大爷: XYF
@@ -30,52 +24,33 @@ import java.util.List;
 public class LiquidateServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        int i=1;int peak=getGoodsNum();
+        HttpSession session=request.getSession(false);
+        String username= (String) session.getAttribute("username");
+        double beforeAccount=ServiceFactory.getUserService().findUser(username).getAccount();
+        ShopResult shopResult;
+        int i=1;int peak=getGoodsNum();String param;String message;
         ArrayList<ShopCart> list = new ArrayList<>();
         while(i<=peak){
-            if(request.getParameter("shop_goods_"+i)!=null){
+            param="shop_goods_"+i;
+            if(request.getParameter(param)!=null){
                 String name=ServiceFactory.getStockService().findGoods(i).getName();
-                list.add(new ShopCart(name,Integer.parseInt(request.getParameter("shop_goods_"+i))));
+                list.add(new ShopCart(name,Integer.parseInt(request.getParameter(param))));
             }
             i++;
         }
         if(ServiceFactory.getShopService().checkAndSumList(list)){
-            String username= (String) request.getSession().getAttribute("username");
-            double beforeAccount=ServiceFactory.getUserService().findUser(username).getAccount();
-            String message=ServiceFactory.getShopService().liquidateShopCart(username,list);
+            message=ServiceFactory.getShopService().liquidateShopCart(username,list);
             double beforeDiscount=ServiceFactory.getShopService().sumList(list);
             double afterDiscount=ServiceFactory.getShopService().getAfterDiscount(beforeDiscount);
             double afterAccount=ServiceFactory.getUserService().findUser(username).getAccount();
-
-
-            PrintWriter pw=response.getWriter();
-            pw.println("<html>" +
-                    "<body style=\"text-align:center\">");
-            pw.println("<p>"+message+"</p>");
-            pw.println("<p>beforeAccount</p>");
-            pw.println("<p>"+beforeAccount+"</p>");
-            pw.println("<p>afterAccount</p>");
-            pw.println("<p>"+afterAccount+"</p>");
-
-            pw.println("<p>beforeDiscount</p>");
-            pw.println("<p>"+beforeDiscount+"</p>");
-            pw.println("<p>afterDiscount</p>");
-            pw.println("<p>"+afterDiscount+"</p>");
-
-            pw.println("<a href=\"login\">"+"back"+"</a>");
-            pw.println("</body></html>");
-
+            shopResult=new ShopResult(message,username,list,beforeAccount,afterAccount,beforeDiscount,afterDiscount);
         }
         else {
-            PrintWriter pw=response.getWriter();
-            pw.println("<html>" +
-                    "<body style=\"text-align:center\">");
-            pw.println("<p>out of stock</p>");
-            pw.println("<a href=\"login\">"+"back"+"</a>");
-            pw.println("</body></html>");
+            message="some goods out of stock";
+            shopResult=new ShopResult(message,username,list,beforeAccount,beforeAccount,0,0);
         }
-
+        session.setAttribute("shop_result",shopResult);
+        response.sendRedirect("/app/giveResult");
     }
 
 
@@ -84,7 +59,6 @@ public class LiquidateServlet extends HttpServlet {
     }
 
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     }
 }

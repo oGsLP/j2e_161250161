@@ -30,6 +30,7 @@ public class LogoutServlet extends HttpServlet {
                 getServletContext().setAttribute("traveller-counter", count + "");
                 request.getSession(false).removeAttribute("traveller");
                 response.sendRedirect("/app/login");
+                return;
             }
             String username = (String) session.getAttribute("username");
             if (username != null) {

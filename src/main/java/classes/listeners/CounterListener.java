@@ -107,8 +107,7 @@ public class CounterListener implements ServletContextListener,
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        se.getSession().setMaxInactiveInterval(60);
-
+        se.getSession().setMaxInactiveInterval(180);
     }
 
     @Override

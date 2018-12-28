@@ -86,7 +86,7 @@ public class StockDaoImpl implements StockDao {
         Statement statement=null;
         ResultSet result=null;
 
-        ArrayList<Goods> goodsList=new ArrayList<Goods>();
+        ArrayList<Goods> goodsList= new ArrayList<>();
 
         try {
             statement=connection.createStatement();
@@ -98,6 +98,11 @@ public class StockDaoImpl implements StockDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            mysqlHelper.closeResultSet(result);
+            mysqlHelper.closeStatement(statement);
+            mysqlHelper.closeConnection(connection);
         }
         return goodsList;
     }

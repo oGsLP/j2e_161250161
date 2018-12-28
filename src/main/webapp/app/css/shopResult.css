@@ -1,0 +1,38 @@
+.shop-result-div{
+    width: 40%;
+    margin: 5% 30%;
+    height: 50%;
+
+    border: 3px inset darkslategrey;
+    border-radius: 10px;
+    box-shadow: darkolivegreen 12px 12px 12px;
+}
+
+.shop-result-div ul{
+}
+
+.shop-result-div li{
+    list-style: none;
+    margin: 2px;
+    border-bottom: 1px black dot-dash;
+}
+
+.shop-result-div li label{
+    width: 120px;
+    display: inline-block;
+    margin-right: 30px;
+    text-align: left;
+}
+
+.shop-result-div li span{
+    width: 100px;
+    margin-left: 30px;
+    display: inline-block;
+    text-align: right;
+}
+.shop-result-div a{
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 2px solid darkslateblue;
+    cursor: pointer;
+}
