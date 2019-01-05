@@ -26,7 +26,9 @@ public class LoginFilter implements Filter {
         boolean isExcludedPage = false;
         System.out.println("to : "+((HttpServletRequest) req).getServletPath());
         for (String page : excludedPage) {
-            if (((HttpServletRequest) req).getServletPath().equals(page)) {
+            String path =((HttpServletRequest) req).getServletPath();
+            if (path.equals(page)||path.endsWith("css")||path.endsWith("js")) {
+                System.out.println("exlucde "+page);
                 isExcludedPage = true;
                 break;
             }
@@ -34,6 +36,7 @@ public class LoginFilter implements Filter {
 
 
         if(isExcludedPage){
+
             chain.doFilter(req,resp);
         }
         else {
