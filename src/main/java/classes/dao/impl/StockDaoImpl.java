@@ -2,10 +2,13 @@ package classes.dao.impl;
 
 import classes.dao.StockDao;
 import classes.entities.Goods;
-import classes.helpers.MYSQLHelper;
+import classes.helpers.HibernateHelper;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
+
+import java.util.List;
 
 /**
  * @你大爷: XYF
@@ -14,10 +17,9 @@ import java.util.ArrayList;
  * @Time: 21:23
  * @Package: classes.dao.impl
  */
-public class StockDaoImpl implements StockDao {
+public class StockDaoImpl extends BaseDaoImpl implements StockDao {
 
     private static StockDaoImpl stockDao=new StockDaoImpl();
-    private static MYSQLHelper mysqlHelper=MYSQLHelper.getInstance();
 
     private StockDaoImpl(){
     }
@@ -29,102 +31,32 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public String getName(int id) {
-        Connection connection=mysqlHelper.getConnection();
-        PreparedStatement pstmt=null;
-        ResultSet result=null;
-
         String name=null;
-
-        try {
-            pstmt=connection.prepareStatement("select name from goods where id=?");
-            pstmt.setInt(1,id);
-            result=pstmt.executeQuery();
-            if(result.next()){
-                name=result.getString("name");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            mysqlHelper.closeResultSet(result);
-            mysqlHelper.closePreparedStatement(pstmt);
-            mysqlHelper.closeConnection(connection);
+        Goods goods= (Goods) super.load(Goods.class,id);
+        if(goods!=null){
+            name=goods.getName();
         }
         return name;
     }
 
     @Override
     public Goods findGoods(String name) {
-        Connection connection=mysqlHelper.getConnection();
-        PreparedStatement pstmt=null;
-        ResultSet result=null;
-
-        Goods goods=null;
-
-        try {
-            pstmt=connection.prepareStatement("select * from goods where name=?");
-            pstmt.setString(1,name);
-            result=pstmt.executeQuery();
-            if(result.next()){
-                goods=new Goods();
-                goods.setGoods(result);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        int id = getIdByName(name);
+        if(id>0){
+            return (Goods) super.load(Goods.class,id);
         }
-        finally {
-            mysqlHelper.closeResultSet(result);
-            mysqlHelper.closePreparedStatement(pstmt);
-            mysqlHelper.closeConnection(connection);
-        }
-        return goods;
+        else return null;
     }
 
     @Override
-    public ArrayList<Goods> getStock() {
-        Connection connection=mysqlHelper.getConnection();
-        Statement statement=null;
-        ResultSet result=null;
-
-        ArrayList<Goods> goodsList= new ArrayList<>();
-
-        try {
-            statement=connection.createStatement();
-            result=statement.executeQuery("select * from goods");
-            while (result.next()){
-                Goods goods=new Goods();
-                goods.setGoods(result);
-                goodsList.add(goods);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            mysqlHelper.closeResultSet(result);
-            mysqlHelper.closeStatement(statement);
-            mysqlHelper.closeConnection(connection);
-        }
-        return goodsList;
+    public List getStock() {
+        return super.getAllList(Goods.class);
     }
 
     @Override
     public boolean addStock(Goods goods) {
         if(goods!=null){
-            Connection connection=mysqlHelper.getConnection();
-            PreparedStatement pstmt=null;
-            try {
-                pstmt=connection.prepareStatement("insert into goods(name,kind,price,num) values(?,?,?,?)");
-                setGoodsExID(goods, pstmt);
-                pstmt.executeUpdate();
-                connection.commit();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            finally {
-                mysqlHelper.closePreparedStatement(pstmt);
-                mysqlHelper.closeConnection(connection);
-            }
-            return true;
+            return super.insert(goods);
         }
         else
             return false;
@@ -135,22 +67,7 @@ public class StockDaoImpl implements StockDao {
     @Override
     public boolean updateGoods(Goods goods) {
         if(goods!=null){
-            Connection connection=mysqlHelper.getConnection();
-            PreparedStatement pstmt=null;
-            try {
-                pstmt=connection.prepareStatement("update goods set name=?,kind=?,price=?,num=? where id=?");
-                setGoodsExID(goods, pstmt);
-                pstmt.setInt(5,goods.getId());
-                pstmt.executeUpdate();
-                connection.commit();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            finally {
-                mysqlHelper.closePreparedStatement(pstmt);
-                mysqlHelper.closeConnection(connection);
-            }
-            return true;
+            return super.update(goods);
         }
         else
             return false;
@@ -158,22 +75,8 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public boolean deleteGoods(String name) {
-        if(name!=null){
-            Connection connection=mysqlHelper.getConnection();
-            PreparedStatement pstmt=null;
-            try {
-                pstmt=connection.prepareStatement("delete from goods where name=?");
-                pstmt.setString(1,name);
-                pstmt.executeUpdate();
-                connection.commit();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            finally {
-                mysqlHelper.closePreparedStatement(pstmt);
-                mysqlHelper.closeConnection(connection);
-            }
-            return true;
+        if(name!=null&&getIdByName(name)>0){
+            return super.delete(Goods.class,getIdByName(name));
         }
         else
             return false;
@@ -181,16 +84,31 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public int getGoodsNum() {
-        return getStock().size();
+        return super.getNum(Goods.class);
     }
 
 
 
-    private void setGoodsExID(Goods goods, PreparedStatement pstmt) throws SQLException {
-        pstmt.setString(1,goods.getName());
-        pstmt.setString(2,goods.getKind());
-        pstmt.setDouble(3,goods.getPrice());
-        pstmt.setInt(4,goods.getNum());
+//    private void setGoodsExID(Goods goods, PreparedStatement pstmt) throws SQLException {
+//        pstmt.setString(1,goods.getName());
+//        pstmt.setString(2,goods.getKind());
+//        pstmt.setDouble(3,goods.getPrice());
+//        pstmt.setInt(4,goods.getNum());
+//    }
+
+    private int getIdByName(String name){
+        int id = -1;
+        Session session= HibernateHelper.getSession();
+        Transaction transaction=session.beginTransaction();
+        Query query=session.createQuery("from Goods goods where goods.name=:goodsName");
+        query.setParameter("goodsName",name);
+        List list=query.list();transaction.commit();
+        if(list!=null) {
+            Goods goods = (Goods) list.get(0);
+            id = goods.getId();
+        }
+        return id;
     }
+
 
 }

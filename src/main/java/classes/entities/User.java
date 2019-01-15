@@ -1,5 +1,7 @@
 package classes.entities;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -10,7 +12,11 @@ import java.sql.SQLException;
  * @Time: 17:33
  * @Package: classes.entities
  */
-public class User {
+@Entity
+@Table(name="user")
+public class User implements Serializable {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
     private int id;
     private String username;
     private String password;

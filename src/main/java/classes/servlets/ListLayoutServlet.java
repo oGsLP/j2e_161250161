@@ -31,7 +31,7 @@ public class ListLayoutServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ArrayList<Goods> goods= ServiceFactory.getStockService().getStock();
+        List goods= ServiceFactory.getStockService().getStock();
         String goods_Json = JSONHelper.toJson(goods);
         System.out.println("Find "+goods.size()+" goods");
         request.setAttribute("stock_list",goods_Json);

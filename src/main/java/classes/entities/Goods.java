@@ -1,5 +1,7 @@
 package classes.entities;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -10,7 +12,11 @@ import java.sql.SQLException;
  * @Time: 18:38
  * @Package: classes.entities
  */
-public class Goods {
+@Entity
+@Table(name="goods")
+public class Goods implements Serializable {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
     private int id;
     private String name;
     private String kind;
