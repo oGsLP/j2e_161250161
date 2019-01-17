@@ -16,14 +16,14 @@ import classes.service.impl.UserManageServiceImpl;
  */
 public class ServiceFactory {
 
-    public static UserManageService getUserService(){
-        return UserManageServiceImpl.getInstance();
-    }
+//    public static UserManageService getUserService(){
+//        return UserManageServiceImpl.getInstance();
+//    }
 
-    public static StockManageService getStockService(){
-        return StockManageServiceImpl.getInstance();
-    }
-
-    public static ShopService getShopService(){return ShopServiceImpl.getInstance();}
+//    public static StockManageService getStockService(){
+//        return StockManageServiceImpl.getInstance();
+//    }
+//
+//    public static ShopService getShopService(){return ShopServiceImpl.getInstance();}
 
 }

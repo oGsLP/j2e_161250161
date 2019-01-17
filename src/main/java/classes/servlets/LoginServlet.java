@@ -1,6 +1,15 @@
 package classes.servlets;
 
+import classes.dao.UserDao;
+import classes.dao.impl.UserDaoImpl;
 import classes.factory.ServiceFactory;
+import classes.service.UserManageService;
+import classes.service.impl.UserManageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -22,11 +31,20 @@ import java.io.IOException;
 @WebServlet("/app/login")
 public class LoginServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+    private UserManageService userManageService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        userManageService = (UserManageService) applicationContext.getBean("UserManageService");
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
-        if(ServiceFactory.getUserService().checkUserName(username)){
-            if(ServiceFactory.getUserService().checkUserPassword(username,password)){
+        if(userManageService.checkUserName(username)){
+            if(userManageService.checkUserPassword(username,password)){
                 HttpSession session = request.getSession(true);
                 session.setAttribute("username", username);
 

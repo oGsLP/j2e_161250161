@@ -1,9 +1,10 @@
 package classes.dao.impl;
 
 import classes.dao.BaseDao;
-import classes.helpers.HibernateHelper;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -14,16 +15,20 @@ import java.util.List;
  * @Time: 21:39
  * @Package: classes.dao.impl
  */
+@Repository
 public class BaseDaoImpl implements BaseDao {
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session getSession(){
+        return sessionFactory.getCurrentSession();
+    }
 
     @Override
     public Object load(Class c, int id) {
         try {
-            Session session=HibernateHelper.getSession();
-            Transaction transaction=session.beginTransaction();
-            Object o=session.get(c,id);
-            transaction.commit();
-            return o;
+            return getSession().get(c,id);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,11 +40,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public List getAllList(Class c) {
         try {
-            Session session=HibernateHelper.getSession();
-            Transaction transaction=session.beginTransaction();
-            List list=session.createQuery("from "+ c.getName()).list();
-            transaction.commit();
-            return list;
+            return getSession().createQuery("from "+ c.getName()).list();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -59,10 +60,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public boolean insert(Object bean) {
         try {
-            Session session=HibernateHelper.getSession();
-            Transaction transaction=session.beginTransaction();
-            session.save(bean);
-            transaction.commit();
+            getSession().save(bean);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,10 +72,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public boolean update(Object bean) {
         try {
-            Session session=HibernateHelper.getSession();
-            Transaction transaction=session.beginTransaction();
-            session.update(bean);
-            transaction.commit();
+            getSession().save(bean);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,14 +85,11 @@ public class BaseDaoImpl implements BaseDao {
     public boolean delete(Class c, int id) {
         boolean sign=false;
         try {
-            Session session=HibernateHelper.getSession();
-            Transaction transaction=session.beginTransaction();
             Object bean=load(c,id);
             if(bean!=null){
-                session.delete(bean);
+                getSession().delete(bean);
                 sign=true;
             }
-            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

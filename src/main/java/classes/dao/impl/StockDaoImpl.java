@@ -1,11 +1,14 @@
 package classes.dao.impl;
 
+import classes.dao.BaseDao;
 import classes.dao.StockDao;
 import classes.entities.Goods;
-import classes.helpers.HibernateHelper;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -17,22 +20,33 @@ import java.util.List;
  * @Time: 21:23
  * @Package: classes.dao.impl
  */
-public class StockDaoImpl extends BaseDaoImpl implements StockDao {
 
-    private static StockDaoImpl stockDao=new StockDaoImpl();
+@Repository
+public class StockDaoImpl implements StockDao {
 
-    private StockDaoImpl(){
+    @Autowired
+    private BaseDao baseDao;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session getSession(){
+        return sessionFactory.getCurrentSession();
     }
-    public static StockDaoImpl getInstance(){
-        return stockDao;
-    }
+
+//    private static StockDaoImpl stockDao=new StockDaoImpl();
+//
+//    private StockDaoImpl(){
+//    }
+//    public static StockDaoImpl getInstance(){
+//        return stockDao;
+//    }
 
 
 
     @Override
     public String getName(int id) {
         String name=null;
-        Goods goods= (Goods) super.load(Goods.class,id);
+        Goods goods= (Goods) baseDao.load(Goods.class,id);
         if(goods!=null){
             name=goods.getName();
         }
@@ -43,20 +57,20 @@ public class StockDaoImpl extends BaseDaoImpl implements StockDao {
     public Goods findGoods(String name) {
         int id = getIdByName(name);
         if(id>0){
-            return (Goods) super.load(Goods.class,id);
+            return (Goods) baseDao.load(Goods.class,id);
         }
         else return null;
     }
 
     @Override
     public List getStock() {
-        return super.getAllList(Goods.class);
+        return baseDao.getAllList(Goods.class);
     }
 
     @Override
     public boolean addStock(Goods goods) {
         if(goods!=null){
-            return super.insert(goods);
+            return baseDao.insert(goods);
         }
         else
             return false;
@@ -67,7 +81,7 @@ public class StockDaoImpl extends BaseDaoImpl implements StockDao {
     @Override
     public boolean updateGoods(Goods goods) {
         if(goods!=null){
-            return super.update(goods);
+            return baseDao.update(goods);
         }
         else
             return false;
@@ -76,7 +90,7 @@ public class StockDaoImpl extends BaseDaoImpl implements StockDao {
     @Override
     public boolean deleteGoods(String name) {
         if(name!=null&&getIdByName(name)>0){
-            return super.delete(Goods.class,getIdByName(name));
+            return baseDao.delete(Goods.class,getIdByName(name));
         }
         else
             return false;
@@ -84,7 +98,7 @@ public class StockDaoImpl extends BaseDaoImpl implements StockDao {
 
     @Override
     public int getGoodsNum() {
-        return super.getNum(Goods.class);
+        return baseDao.getNum(Goods.class);
     }
 
 
@@ -98,11 +112,9 @@ public class StockDaoImpl extends BaseDaoImpl implements StockDao {
 
     private int getIdByName(String name){
         int id = -1;
-        Session session= HibernateHelper.getSession();
-        Transaction transaction=session.beginTransaction();
-        Query query=session.createQuery("from Goods goods where goods.name=:goodsName");
+        Query query=getSession().createQuery("from Goods goods where goods.name=:goodsName");
         query.setParameter("goodsName",name);
-        List list=query.list();transaction.commit();
+        List list=query.list();
         if(list!=null) {
             Goods goods = (Goods) list.get(0);
             id = goods.getId();

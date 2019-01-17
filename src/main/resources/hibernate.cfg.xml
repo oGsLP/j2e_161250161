@@ -15,7 +15,8 @@
     <!--            数据库方法配置， hibernate在运行的时候，会根据不同的方言生成符合当前数据库语法的sql         -->
     <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 
-
+    <property name="show_sql">true</property>
+    <property name="hbm2ddl.auto">update</property>
     <!-- 2. 其他相关配置 -->
     <property name="hibernate.connection.autocommit">true</property>
     <property name="current_session_context_class">thread</property>

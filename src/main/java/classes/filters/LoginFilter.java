@@ -28,7 +28,7 @@ public class LoginFilter implements Filter {
         for (String page : excludedPage) {
             String path =((HttpServletRequest) req).getServletPath();
             if (path.equals(page)||path.endsWith("css")||path.endsWith("js")) {
-                System.out.println("exlucde "+page);
+                System.out.println("exclude "+page);
                 isExcludedPage = true;
                 break;
             }

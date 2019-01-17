@@ -42,7 +42,7 @@
         </div>
         <div class="shop-list">
             <h3>Shop List</h3>
-            <ul id="shop-ul" class="shop-list-ul"></ul>
+            <ul id="shop-ul" class="shop-list-ul" ></ul>
         </div>
     </div>
     <div class="stock-footer">

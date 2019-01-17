@@ -1,8 +1,12 @@
 package classes.service.impl;
 
+import classes.dao.UserDao;
+import classes.dao.impl.UserDaoImpl;
 import classes.entities.User;
 import classes.factory.DaoFactory;
 import classes.service.UserManageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,17 +17,23 @@ import java.util.List;
  * @Time: 21:28
  * @Package: classes.service.impl
  */
+@Service(value = "UserManageService")
 public class UserManageServiceImpl implements UserManageService {
 
+    @Autowired
+    private UserDao userDao;
 
-    private static UserManageServiceImpl userService=new UserManageServiceImpl();
-    public static UserManageServiceImpl getInstance(){return userService;}
+
+
+
+//    private static UserManageServiceImpl userService=new UserManageServiceImpl();
+//    public static UserManageServiceImpl getInstance(){return userService;}
 
 
     @Override
     public User findUser(int id) {
         User user=null;
-        String username= DaoFactory.getUserDao().getName(id);
+        String username= userDao.getName(id);
         if(username!=null){
             user=findUser(username);
         }
@@ -32,12 +42,12 @@ public class UserManageServiceImpl implements UserManageService {
 
     @Override
     public User findUser(String username) {
-        return DaoFactory.getUserDao().findUser(username);
+        return userDao.findUser(username);
     }
 
     @Override
     public List getUsers() {
-        return DaoFactory.getUserDao().getUsers();
+        return userDao.getUsers();
     }
 
     @Override
@@ -53,7 +63,7 @@ public class UserManageServiceImpl implements UserManageService {
     @Override
     public boolean registerUser(String username, String password) {
         if(findUser(username)!=null){
-            DaoFactory.getUserDao().addUser(new User(username,password));
+            userDao.addUser(new User(username,password));
             return true;
         }
         else

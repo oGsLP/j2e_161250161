@@ -1,5 +1,7 @@
 package classes.dao;
 
+import org.hibernate.Session;
+
 import java.util.List;
 
 /**
@@ -11,19 +13,18 @@ import java.util.List;
  */
 public interface BaseDao {
 
+    Object load(Class c, int id);
 
-    public Object load(Class c, int id);
+    List getAllList(Class c) ;
 
-    public List getAllList(Class c) ;
+    int getNum(Class c) ;
 
-    public int getNum(Class c) ;
+    boolean insert(Object bean) ;
 
-    public boolean insert(Object bean) ;
+    boolean update(Object bean) ;
 
-    public boolean update(Object bean) ;
+    boolean delete(Class c, int id) ;
 
-    public boolean delete(Class c, int id) ;
-
-    public boolean delete(Class c, String[] ids) ;
+    boolean delete(Class c, String[] ids) ;
 
 }

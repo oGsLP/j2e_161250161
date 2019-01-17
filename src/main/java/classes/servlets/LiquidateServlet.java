@@ -3,6 +3,12 @@ package classes.servlets;
 import classes.factory.ServiceFactory;
 import classes.models.ShopCart;
 import classes.models.ShopResult;
+import classes.service.ShopService;
+import classes.service.StockManageService;
+import classes.service.UserManageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,26 +29,39 @@ import java.util.ArrayList;
 @WebServlet("/app/liquidate")
 public class LiquidateServlet extends HttpServlet {
 
+    private StockManageService stockManageService;
+    private ShopService shopService;
+    private UserManageService userManageService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        userManageService = (UserManageService) applicationContext.getBean("UserManageService");
+        stockManageService= (StockManageService) applicationContext.getBean("StockManageService");
+        shopService= (ShopService) applicationContext.getBean("ShopService");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session=request.getSession(false);
         String username= (String) session.getAttribute("username");
-        double beforeAccount=ServiceFactory.getUserService().findUser(username).getAccount();
+        double beforeAccount=userManageService.findUser(username).getAccount();
         ShopResult shopResult;
         int i=1;int peak=getGoodsNum();String param;String message;
         ArrayList<ShopCart> list = new ArrayList<>();
         while(i<=peak){
             param="shop_goods_"+i;
             if(request.getParameter(param)!=null){
-                String name=ServiceFactory.getStockService().findGoods(i).getName();
+                String name=stockManageService.findGoods(i).getName();
                 list.add(new ShopCart(name,Integer.parseInt(request.getParameter(param))));
             }
             i++;
         }
-        if(ServiceFactory.getShopService().checkAndSumList(list)){
-            message=ServiceFactory.getShopService().liquidateShopCart(username,list);
-            double beforeDiscount=ServiceFactory.getShopService().sumList(list);
-            double afterDiscount=ServiceFactory.getShopService().getAfterDiscount(beforeDiscount);
-            double afterAccount=ServiceFactory.getUserService().findUser(username).getAccount();
+        if(shopService.checkAndSumList(list)){
+            message=shopService.liquidateShopCart(username,list);
+            double beforeDiscount=shopService.sumList(list);
+            double afterDiscount=shopService.getAfterDiscount(beforeDiscount);
+            double afterAccount=userManageService.findUser(username).getAccount();
             shopResult=new ShopResult(message,username,list,beforeAccount,afterAccount,beforeDiscount,afterDiscount);
         }
         else {
@@ -55,7 +74,7 @@ public class LiquidateServlet extends HttpServlet {
 
 
     private int getGoodsNum() {
-        return ServiceFactory.getStockService().getGoodsNum();
+        return stockManageService.getGoodsNum();
     }
 
 

@@ -1,11 +1,13 @@
 package classes.dao.impl;
 
+import classes.dao.BaseDao;
 import classes.dao.UserDao;
 import classes.entities.User;
-import classes.helpers.HibernateHelper;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
@@ -17,23 +19,33 @@ import java.util.List;
  * @Time: 20:45
  * @Package: classes.dao.impl
  */
-public class UserDaoImpl extends BaseDaoImpl implements UserDao  {
+@Repository(value = "UserDao")
+public class UserDaoImpl implements UserDao  {
 
-    private static UserDaoImpl userDao=new UserDaoImpl();
 
-    private UserDaoImpl() {
+    @Autowired
+    private BaseDao baseDao;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session getSession(){
+        return sessionFactory.getCurrentSession();
     }
-
-    public static UserDaoImpl getInstance(){
-        return userDao;
-    }
+//    private static UserDaoImpl userDao=new UserDaoImpl();
+//
+//    private UserDaoImpl() {
+//    }
+//
+//    public static UserDaoImpl getInstance(){
+//        return userDao;
+//    }
 
 
 
     @Override
     public String getName(int id) {
         String username=null;
-        User user= (User) super.load(User.class,id);
+        User user= (User) baseDao.load(User.class,id);
         if(user!=null){
             username=user.getUsername();
         }
@@ -44,20 +56,20 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao  {
     public User findUser(String username) {
         int id = getIdByName(username);
         if(id>0){
-            return (User) super.load(User.class,id);
+            return (User) baseDao.load(User.class,id);
         }
         else return null;
     }
 
     @Override
     public List getUsers() {
-        return super.getAllList(User.class);
+        return baseDao.getAllList(User.class);
     }
 
     @Override
     public boolean addUser(User user) {
         if(user!=null){
-            return super.insert(user);
+            return baseDao.insert(user);
         }
         else
             return false;
@@ -66,7 +78,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao  {
     @Override
     public boolean deleteUser(String username) {
         if(username!=null&&getIdByName(username)>0){
-            return super.delete(User.class,getIdByName(username));
+            return baseDao.delete(User.class,getIdByName(username));
         }
         else
             return false;
@@ -75,7 +87,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao  {
     @Override
     public boolean updateUser(User user) {
         if(user!=null){
-            return super.update(user);
+            return baseDao.update(user);
         }
         else return false;
     }
@@ -88,11 +100,9 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao  {
 //    }
     private int getIdByName(String username){
         int id = -1;
-        Session session=HibernateHelper.getSession();
-        Transaction transaction=session.beginTransaction();
-        Query query=session.createQuery("from User user where user.username=:name");
+        Query query=getSession().createQuery("from User user where user.username=:name");
         query.setParameter("name",username);
-        List list=query.list();transaction.commit();
+        List list=query.list();
         if(list!=null) {
             User user = (User) list.get(0);
             id = user.getId();

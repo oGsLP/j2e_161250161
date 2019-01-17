@@ -1,5 +1,6 @@
 package classes.helpers;
 
+import classes.entities.Deal;
 import classes.entities.Goods;
 import classes.entities.User;
 import org.hibernate.Session;
@@ -25,6 +26,7 @@ public class HibernateHelper {
         Configuration configuration=new Configuration().configure();
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Goods.class);
+        configuration.addAnnotatedClass(Deal.class);
         ServiceRegistry registry=new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         sessionFactory=configuration.buildSessionFactory(registry);
         return sessionFactory;
