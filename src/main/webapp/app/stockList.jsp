@@ -23,7 +23,9 @@
 
 <body onload="generateStock();">
 <jsp:include page="header.jsp"/>
+<%
 
+%>
 <h2>Enjoy your shopping</h2>
 <form class="stock"  method="post" action="liquidate">
     <div class="stock-shop">
